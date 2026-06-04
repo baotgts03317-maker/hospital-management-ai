@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch khám của tôi - AI Smart Clinic</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.28), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.28), transparent 35%),
+                #0f172a;
+            color: #e5e7eb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            padding: 45px 0;
+        }
+
+        .top-card {
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 28px;
+            padding: 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.18);
+        }
+
+        .page-title {
+            font-weight: 900;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #94a3b8;
+            margin-bottom: 0;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-ai:hover {
+            color: white;
+            opacity: 0.92;
+        }
+
+        .btn-ai-outline {
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            color: #e0f2fe;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-ai-outline:hover {
+            background: rgba(59, 130, 246, 0.16);
+            color: white;
+        }
+
+        .stat-card {
+            background: rgba(17, 24, 39, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 24px;
+            padding: 24px;
+            height: 100%;
+            transition: 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 0 28px rgba(56, 189, 248, 0.16);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 17px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card h3 {
+            color: #f8fafc;
+            font-weight: 900;
+            margin-bottom: 3px;
+        }
+
+        .stat-card p {
+            color: #94a3b8;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .appointments-card {
+            margin-top: 30px;
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 0 35px rgba(15, 23, 42, 0.35);
+        }
+
+        .appointments-card h4 {
+            color: #f8fafc;
+            font-weight: 850;
+        }
+
+        .table {
+            color: #e5e7eb;
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            color: #93c5fd;
+            border-color: rgba(148, 163, 184, 0.18);
+            font-weight: 800;
+            padding: 16px;
+        }
+
+        .table tbody td {
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.12);
+            padding: 16px;
+            vertical-align: middle;
+        }
+
+        .doctor-name {
+            color: #f8fafc;
+            font-weight: 750;
+        }
+
+        .specialization {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            border-radius: 999px;
+            padding: 7px 13px;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .status-pending {
+            background: rgba(250, 204, 21, 0.16);
+            color: #fde047;
+            border: 1px solid rgba(250, 204, 21, 0.35);
+        }
+
+        .status-confirmed {
+            background: rgba(59, 130, 246, 0.16);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+        }
+
+        .status-completed {
+            background: rgba(34, 197, 94, 0.16);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.16);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .status-default {
+            background: rgba(148, 163, 184, 0.16);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 55px;
+            color: #38bdf8;
+            margin-bottom: 16px;
+        }
+
+        .ai-tip {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(124, 58, 237, 0.18));
+            border: 1px solid rgba(147, 197, 253, 0.24);
+            border-radius: 22px;
+            padding: 22px;
+            margin-top: 28px;
+            color: #dbeafe;
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 28px 0;
+            }
+
+            .top-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container page-wrapper">
+
+    <div class="top-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-calendar-check text-info"></i>
+                    Lịch khám của tôi
+                </h1>
+
+                <p class="page-subtitle">
+                    Theo dõi các lịch khám đã đặt và trạng thái xác nhận từ bác sĩ.
+                </p>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+                <a th:href="@{/patient/ai-consultation}" class="btn-ai">
+                    <i class="bi bi-robot me-1"></i>
+                    AI tư vấn
+                </a>
+
+                <a th:href="@{/doctors}" class="btn-ai-outline">
+                    <i class="bi bi-person-heart me-1"></i>
+                    Đặt lịch mới
+                </a>
+
+                <a th:href="@{/patient/dashboard}" class="btn-ai-outline">
+                    <i class="bi bi-grid-1x2 me-1"></i>
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-calendar2-week"></i>
+                </div>
+                <h3 th:text="${appointments != null ? #lists.size(appointments) : 0}">0</h3>
+                <p>Tổng lịch khám</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <h3>AI</h3>
+                <p>Theo dõi trạng thái</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-person-heart"></i>
+                </div>
+                <h3>24/7</h3>
+                <p>Hỗ trợ đặt lịch</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h3>Smart</h3>
+                <p>Quản lý sức khỏe</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="appointments-card">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <h4 class="mb-0">
+                Danh sách lịch khám
+            </h4>
+
+            <span class="text-secondary">
+                AI Smart Clinic
+            </span>
+        </div>
+
+        <div th:if="${appointments == null or #lists.isEmpty(appointments)}" class="empty-state">
+            <i class="bi bi-calendar-x"></i>
+            <h4>Chưa có lịch khám</h4>
+            <p>Bạn có thể dùng AI tư vấn triệu chứng để chọn chuyên khoa và bác sĩ phù hợp.</p>
+
+            <a th:href="@{/patient/ai-consultation}" class="btn-ai mt-2">
+                Tư vấn bằng AI ngay
+            </a>
+        </div>
+
+        <div class="table-responsive" th:if="${appointments != null and !#lists.isEmpty(appointments)}">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th>Bác sĩ</th>
+                    <th>Ngày khám</th>
+                    <th>Giờ khám</th>
+                    <th>Lý do khám</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="appointment : ${appointments}">
+                    <td>
+                        <div class="doctor-name"
+                             th:text="${appointment.doctor.user.fullName}">
+                            Tên bác sĩ
+                        </div>
+
+                        <div class="specialization"
+                             th:text="${appointment.doctor.specialization}">
+                            Chuyên khoa
+                        </div>
+                    </td>
+
+                    <td th:text="${appointment.appointmentDate}">
+                        2026-01-01
+                    </td>
+
+                    <td th:text="${appointment.appointmentTime}">
+                        08:00
+                    </td>
+
+                    <td th:text="${appointment.reason}">
+                        Lý do khám
+                    </td>
+
+                    <td>
+                        <span th:if="${appointment.status.name() == 'PENDING'}"
+                              class="status-badge status-pending">
+                            Chờ xác nhận
+                        </span>
+
+                        <span th:if="${appointment.status.name() == 'CONFIRMED'}"
+                              class="status-badge status-confirmed">
+                            Đã xác nhận
+                        </span>
+
+                        <span th:if="${appointment.status.name() == 'COMPLETED'}"
+                              class="status-badge status-completed">
+                            Hoàn thành
+                        </span>
+
+                        <span th:if="${appointment.status.name() == 'CANCELLED'}"
+                              class="status-badge status-cancelled">
+                            Đã hủy
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="ai-tip">
+        <h5 class="fw-bold">
+            <i class="bi bi-lightbulb"></i>
+            AI Tip
+        </h5>
+        <p class="mb-0">
+            Nếu chưa biết nên khám chuyên khoa nào, hãy nhập triệu chứng vào AI.
+            Hệ thống sẽ phân tích mức độ nguy cơ và gợi ý bác sĩ phù hợp.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

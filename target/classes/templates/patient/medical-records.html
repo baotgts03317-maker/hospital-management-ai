@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hồ sơ bệnh án - AI Smart Clinic</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.28), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.28), transparent 35%),
+                #0f172a;
+            color: #e5e7eb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            padding: 45px 0;
+        }
+
+        .top-card {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(124, 58, 237, 0.88));
+            border-radius: 30px;
+            padding: 34px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 42px rgba(59, 130, 246, 0.28);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-card::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            right: -90px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+        }
+
+        .page-title {
+            font-weight: 900;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-subtitle {
+            color: #dbeafe;
+            margin-bottom: 0;
+            max-width: 760px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-ai-light {
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 800;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-ai-outline-light {
+            border: 1px solid rgba(255,255,255,0.45);
+            color: white;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 700;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-ai-outline-light:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .stat-card {
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 24px;
+            padding: 24px;
+            height: 100%;
+            transition: 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 28px rgba(56, 189, 248, 0.16);
+            border-color: rgba(56, 189, 248, 0.45);
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card h3 {
+            color: #f8fafc;
+            font-weight: 900;
+            margin-bottom: 3px;
+        }
+
+        .stat-card p {
+            color: #94a3b8;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .records-card {
+            margin-top: 30px;
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 0 35px rgba(15, 23, 42, 0.35);
+        }
+
+        .records-card h4 {
+            color: #f8fafc;
+            font-weight: 850;
+        }
+
+        .record-item {
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: 0.25s;
+        }
+
+        .record-item:hover {
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 0 28px rgba(56, 189, 248, 0.14);
+            transform: translateY(-3px);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .doctor-name {
+            color: #f8fafc;
+            font-weight: 850;
+            margin-bottom: 5px;
+        }
+
+        .record-date {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .record-badge {
+            background: rgba(56, 189, 248, 0.14);
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            color: #7dd3fc;
+            border-radius: 999px;
+            padding: 8px 13px;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .info-box {
+            background: rgba(17, 24, 39, 0.84);
+            border: 1px solid rgba(148, 163, 184, 0.13);
+            border-radius: 18px;
+            padding: 16px;
+            height: 100%;
+        }
+
+        .info-label {
+            color: #93c5fd;
+            font-weight: 800;
+            margin-bottom: 7px;
+        }
+
+        .info-text {
+            color: #cbd5e1;
+            margin-bottom: 0;
+            white-space: pre-line;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 58px;
+            color: #38bdf8;
+            margin-bottom: 16px;
+        }
+
+        .ai-tip {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(124, 58, 237, 0.18));
+            border: 1px solid rgba(147, 197, 253, 0.24);
+            border-radius: 22px;
+            padding: 22px;
+            margin-top: 28px;
+            color: #dbeafe;
+        }
+
+        .table {
+            color: #e5e7eb;
+        }
+
+        .table thead th {
+            color: #93c5fd;
+            border-color: rgba(148, 163, 184, 0.18);
+            font-weight: 800;
+        }
+
+        .table tbody td {
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.12);
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 28px 0;
+            }
+
+            .top-card,
+            .records-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container page-wrapper">
+
+    <section class="top-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-file-medical"></i>
+                    Hồ sơ bệnh án
+                </h1>
+
+                <p class="page-subtitle">
+                    Theo dõi lịch sử khám bệnh, triệu chứng, chẩn đoán, đơn thuốc và ghi chú điều trị từ bác sĩ.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a th:href="@{/patient/dashboard}" class="btn-ai-light">
+                    <i class="bi bi-grid-1x2 me-1"></i>
+                    Dashboard
+                </a>
+
+                <a th:href="@{/patient/ai-consultation}" class="btn-ai-outline-light">
+                    <i class="bi bi-robot me-1"></i>
+                    AI tư vấn
+                </a>
+
+                <a th:href="@{/patient/appointments}" class="btn-ai-outline-light">
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Lịch khám
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-journal-medical"></i>
+                </div>
+                <h3 th:text="${medicalRecords != null ? #lists.size(medicalRecords) : 0}">0</h3>
+                <p>Tổng bệnh án</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-capsule"></i>
+                </div>
+                <h3>Rx</h3>
+                <p>Đơn thuốc</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <h3>AI</h3>
+                <p>Theo dõi sức khỏe</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h3>Safe</h3>
+                <p>Lưu trữ an toàn</p>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="records-card">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <h4 class="mb-0">
+                Danh sách bệnh án
+            </h4>
+
+            <span class="record-badge">
+                AI Smart Clinic
+            </span>
+        </div>
+
+        <div th:if="${medicalRecords == null or #lists.isEmpty(medicalRecords)}" class="empty-state">
+            <i class="bi bi-file-earmark-x"></i>
+            <h4>Chưa có hồ sơ bệnh án</h4>
+            <p>Sau khi bác sĩ tạo bệnh án, thông tin sẽ hiển thị tại đây.</p>
+
+            <a th:href="@{/doctors}" class="btn btn-primary rounded-4 mt-2">
+                Đặt lịch khám
+            </a>
+        </div>
+
+        <div th:if="${medicalRecords != null and !#lists.isEmpty(medicalRecords)}">
+
+            <div class="record-item" th:each="record : ${medicalRecords}">
+
+                <div class="record-header">
+                    <div>
+                        <h5 class="doctor-name"
+                            th:text="${record.appointment.doctor.user.fullName}">
+                            Tên bác sĩ
+                        </h5>
+
+                        <div class="record-date">
+                            <i class="bi bi-calendar-event"></i>
+                            <span th:text="${#temporals.format(record.createdAt, 'dd/MM/yyyy HH:mm')}">
+                                01/01/2026
+                            </span>
+                        </div>
+                    </div>
+
+                    <span class="record-badge">
+                        <i class="bi bi-file-medical"></i>
+                        Medical Record
+                    </span>
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <div class="info-label">
+                                <i class="bi bi-activity"></i>
+                                Triệu chứng
+                            </div>
+                            <p class="info-text" th:text="${record.symptoms}">
+                                Triệu chứng
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <div class="info-label">
+                                <i class="bi bi-clipboard2-pulse"></i>
+                                Chẩn đoán
+                            </div>
+                            <p class="info-text" th:text="${record.diagnosis}">
+                                Chẩn đoán
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <div class="info-label">
+                                <i class="bi bi-capsule"></i>
+                                Đơn thuốc
+                            </div>
+                            <p class="info-text" th:text="${record.prescription}">
+                                Đơn thuốc
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <div class="info-label">
+                                <i class="bi bi-chat-left-text"></i>
+                                Ghi chú bác sĩ
+                            </div>
+                            <p class="info-text" th:text="${record.doctorNotes}">
+                                Ghi chú
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="ai-tip">
+        <h5 class="fw-bold">
+            <i class="bi bi-lightbulb"></i>
+            AI Tip
+        </h5>
+        <p class="mb-0">
+            Hãy sử dụng AI tư vấn triệu chứng trước khi đặt lịch để hệ thống gợi ý chuyên khoa
+            và bác sĩ phù hợp với tình trạng sức khỏe của bạn.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Edit Profile')}"></head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow-custom border-0">
+
+        <div class="card-body p-5">
+
+            <h2 class="mb-4">
+                Edit Profile
+            </h2>
+
+            <form th:action="@{/profile/edit}"
+                  th:object="${profileDTO}"
+                  method="post"
+
+                  enctype="multipart/form-data">
+
+                <div class="mb-3">
+
+                    <label>Full Name</label>
+
+                    <input type="text"
+                           th:field="*{fullName}"
+                           class="form-control">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Phone</label>
+
+                    <input type="text"
+                           th:field="*{phone}"
+                           class="form-control">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Address</label>
+
+                    <input type="text"
+                           th:field="*{address}"
+                           class="form-control">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Avatar</label>
+
+                    <input type="file"
+                           th:field="*{image}"
+                           class="form-control"
+
+                           onchange="previewImage(event)">
+
+                </div>
+
+                <div class="mb-3 text-center">
+
+                    <img id="preview"
+
+     					th:if="${user.avatar != null}"
+
+     					th:src="@{'/uploads/' + ${user.avatar}}"
+
+     					width="150"
+     					height="150"
+
+    					class="rounded-circle"
+
+     					style="object-fit:cover;">                      
+					<img id="preview"
+
+     					th:unless="${user.avatar != null}"
+
+     					src="https://via.placeholder.com/150"
+
+     					width="150"
+     					height="150"
+
+     					class="rounded-circle"
+
+     					style="object-fit:cover;">
+                </div>
+
+                <button class="btn btn-primary">
+
+                    Save
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function previewImage(event){
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(){
+
+        document.getElementById("preview")
+            .src = reader.result;
+
+    }
+
+    reader.readAsDataURL(
+        event.target.files[0]
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>

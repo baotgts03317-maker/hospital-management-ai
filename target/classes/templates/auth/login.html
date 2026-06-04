@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - AI Smart Clinic</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.45), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.45), transparent 35%),
+                #0f172a;
+            color: #f8fafc;
+        }
+
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 35px 15px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 980px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.28);
+            backdrop-filter: blur(18px);
+        }
+
+        .login-left {
+            padding: 60px 50px;
+            background:
+                linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(124, 58, 237, 0.92));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            right: -90px;
+            bottom: -90px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+        }
+
+        .brand {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 35px;
+        }
+
+        .brand i {
+            color: #bae6fd;
+        }
+
+        .login-left h1 {
+            font-size: 46px;
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .login-left p {
+            color: #dbeafe;
+            font-size: 17px;
+            max-width: 520px;
+        }
+
+        .ai-feature {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 22px;
+            color: #eff6ff;
+        }
+
+        .ai-feature i {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .login-right {
+            padding: 55px 45px;
+            background: rgba(2, 6, 23, 0.35);
+        }
+
+        .login-title {
+            font-weight: 850;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        .input-group-text {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            color: #38bdf8;
+            border-radius: 14px 0 0 14px;
+        }
+
+        .form-control {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            color: #fff;
+            border-radius: 0 14px 14px 0;
+            padding: 13px 15px;
+        }
+
+        .form-control:focus {
+            background: #0f172a;
+            color: #fff;
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 0.2rem rgba(56, 189, 248, 0.18);
+        }
+
+        .form-control::placeholder {
+            color: #64748b;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 13px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        .btn-login:hover {
+            color: white;
+            opacity: 0.93;
+        }
+
+        .register-link,
+        .home-link {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .alert {
+            border-radius: 14px;
+            border: none;
+        }
+
+        .demo-box {
+            margin-top: 28px;
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(147, 197, 253, 0.22);
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .demo-box strong {
+            color: #f8fafc;
+        }
+
+        @media (max-width: 768px) {
+            .login-card {
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                padding: 38px 28px;
+            }
+
+            .login-left h1 {
+                font-size: 36px;
+            }
+
+            .login-right {
+                padding: 35px 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <div class="login-card">
+
+        <div class="login-left">
+
+            <div class="brand">
+                <i class="bi bi-heart-pulse-fill"></i>
+                AI Smart Clinic
+            </div>
+
+            <h1>
+                Đăng nhập vào phòng khám thông minh
+            </h1>
+
+            <p>
+                Quản lý lịch khám, hồ sơ bệnh án và sử dụng AI để tư vấn triệu chứng,
+                gợi ý bác sĩ, tóm tắt bệnh án và phân tích dữ liệu y tế.
+            </p>
+
+            <div class="ai-feature">
+                <i class="bi bi-robot"></i>
+                <span>AI tư vấn triệu chứng cho bệnh nhân</span>
+            </div>
+
+            <div class="ai-feature">
+                <i class="bi bi-person-heart"></i>
+                <span>Gợi ý bác sĩ phù hợp theo chuyên khoa</span>
+            </div>
+
+            <div class="ai-feature">
+                <i class="bi bi-clipboard2-pulse"></i>
+                <span>AI hỗ trợ bác sĩ tóm tắt bệnh án</span>
+            </div>
+
+        </div>
+
+        <div class="login-right">
+
+            <h2 class="login-title">Đăng nhập</h2>
+            <p class="login-subtitle">
+                Vui lòng nhập tài khoản để tiếp tục.
+            </p>
+
+            <div th:if="${param.error}" class="alert alert-danger">
+                Email hoặc mật khẩu không chính xác.
+            </div>
+
+            <div th:if="${param.logout}" class="alert alert-success">
+                Bạn đã đăng xuất thành công.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="admin@hospital.com"
+                               required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               placeholder="Nhập mật khẩu"
+                               required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>
+                    Đăng nhập
+                </button>
+
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-secondary">Chưa có tài khoản?</span>
+                <a th:href="@{/register}" class="register-link">
+                    Đăng ký ngay
+                </a>
+            </div>
+
+            <div class="text-center mt-2">
+                <a th:href="@{/}" class="home-link">
+                    <i class="bi bi-arrow-left"></i>
+                    Quay về trang chủ
+                </a>
+            </div>
+
+            <div class="demo-box">
+                <strong>Tài khoản demo:</strong><br>
+                Admin: admin@hospital.com / 123456<br>
+                Doctor: doctor1@hospital.com / 123456
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

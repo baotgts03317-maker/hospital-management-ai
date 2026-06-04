@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Users')}"></head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-md-2 p-0">
+
+            <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+
+        </div>
+
+        <div class="col-md-10 p-4">
+
+            <div class="card shadow-custom border-0">
+
+                <div class="card-body">
+
+                    <h3 class="mb-4">
+                        Users Management
+                    </h3>
+
+                    <table class="table table-hover">
+
+                        <thead class="table-dark">
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="user : ${users}">
+
+                            <td th:text="${user.id}"></td>
+
+                            <td th:text="${user.fullName}"></td>
+
+                            <td th:text="${user.email}"></td>
+
+                            <td th:text="${user.role}"></td>
+
+                            <td>
+
+                                <span th:if="${user.enabled}"
+                                      class="badge bg-success">
+                                    ACTIVE
+                                </span>
+
+                                <span th:unless="${user.enabled}"
+                                      class="badge bg-danger">
+                                    LOCKED
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button th:if="${user.enabled}"
+        							type="button"
+        							class="btn btn-warning btn-sm"
+        							th:onclick="'confirmAction(\'/admin/users/lock/' + ${user.id} + '\', \'Khóa tài khoản?\')'">
+
+    								Lock
+
+								</button>
+
+                                <button th:unless="${user.enabled}"
+        							type="button"
+        							class="btn btn-success btn-sm"
+        							th:onclick="'confirmAction(\'/admin/users/unlock/' + ${user.id} + '\', \'Mở khóa tài khoản?\')'">
+
+    								Unlock
+
+								</button>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+function confirmAction(url, message){
+
+    Swal.fire({
+
+        title: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Đóng'
+
+    }).then((result) => {
+
+        if(result.isConfirmed){
+
+            window.location.href = url;
+
+        }
+
+    });
+
+}
+
+</script>
+<div id="loading"
+     style="display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:rgba(255,255,255,0.7);
+            z-index:9999;
+            justify-content:center;
+            align-items:center;">
+
+    <div class="spinner-border text-primary"></div>
+
+</div>
+</body>
+
+</html>

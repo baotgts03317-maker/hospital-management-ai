@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch khám bác sĩ - AI Smart Clinic</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.28), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.28), transparent 35%),
+                #0f172a;
+            color: #e5e7eb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            padding: 45px 0;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(124, 58, 237, 0.88));
+            border-radius: 30px;
+            padding: 34px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 42px rgba(59, 130, 246, 0.28);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            right: -90px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+        }
+
+        .hero-card h1,
+        .hero-card p,
+        .hero-card a {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-card h1 {
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .hero-card p {
+            color: #dbeafe;
+            max-width: 780px;
+        }
+
+        .btn-ai-light {
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .btn-ai-outline-light {
+            border: 1px solid rgba(255,255,255,0.45);
+            color: white;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-ai-outline-light:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .stat-card {
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 24px;
+            padding: 24px;
+            height: 100%;
+            transition: 0.25s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 28px rgba(56, 189, 248, 0.16);
+            border-color: rgba(56, 189, 248, 0.45);
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card h3 {
+            color: #f8fafc;
+            font-weight: 900;
+            margin-bottom: 3px;
+        }
+
+        .stat-card p {
+            color: #94a3b8;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .appointments-card {
+            margin-top: 30px;
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 0 35px rgba(15, 23, 42, 0.35);
+        }
+
+        .appointments-card h4 {
+            color: #f8fafc;
+            font-weight: 850;
+        }
+
+        .table {
+            color: #e5e7eb;
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            color: #93c5fd;
+            border-color: rgba(148, 163, 184, 0.18);
+            font-weight: 800;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.12);
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .patient-name {
+            color: #f8fafc;
+            font-weight: 800;
+        }
+
+        .sub-text {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .reason-box {
+            max-width: 320px;
+            color: #cbd5e1;
+        }
+
+        .status-badge {
+            border-radius: 999px;
+            padding: 7px 13px;
+            font-weight: 850;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(250, 204, 21, 0.16);
+            color: #fde047;
+            border: 1px solid rgba(250, 204, 21, 0.35);
+        }
+
+        .status-confirmed {
+            background: rgba(59, 130, 246, 0.16);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+        }
+
+        .status-completed {
+            background: rgba(34, 197, 94, 0.16);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.16);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .btn-confirm {
+            background: rgba(34, 197, 94, 0.16);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            border-radius: 13px;
+            padding: 8px 13px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-complete {
+            background: rgba(59, 130, 246, 0.16);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            border-radius: 13px;
+            padding: 8px 13px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-cancel {
+            background: rgba(239, 68, 68, 0.16);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: 13px;
+            padding: 8px 13px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 13px;
+            padding: 8px 13px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-record:hover,
+        .btn-confirm:hover,
+        .btn-complete:hover,
+        .btn-cancel:hover {
+            color: white;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            color: #f8fafc;
+            border-radius: 16px;
+            padding: 12px 15px;
+            min-width: 260px;
+        }
+
+        .search-box:focus {
+            background: #0f172a;
+            color: white;
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 0.2rem rgba(56, 189, 248, 0.18);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 55px;
+            color: #38bdf8;
+            margin-bottom: 16px;
+        }
+
+        .ai-tip {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(124, 58, 237, 0.18));
+            border: 1px solid rgba(147, 197, 253, 0.24);
+            border-radius: 22px;
+            padding: 22px;
+            margin-top: 28px;
+            color: #dbeafe;
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 28px 0;
+            }
+
+            .hero-card,
+            .appointments-card {
+                padding: 22px;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid px-4 page-wrapper">
+
+    <section class="hero-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1>
+                    <i class="bi bi-calendar-check"></i>
+                    Lịch khám của bác sĩ
+                </h1>
+
+                <p class="mt-2 mb-0">
+                    Quản lý lịch khám, xác nhận lịch hẹn, hoàn thành khám và tạo hồ sơ bệnh án cho bệnh nhân.
+                </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a th:href="@{/doctor/dashboard}" class="btn-ai-light">
+                    <i class="bi bi-grid-1x2 me-1"></i>
+                    Dashboard
+                </a>
+
+                <a th:href="@{/doctor/medical-records}" class="btn-ai-outline-light">
+                    <i class="bi bi-file-medical me-1"></i>
+                    Bệnh án
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-calendar2-week"></i>
+                </div>
+                <h3 th:text="${appointments != null ? #lists.size(appointments) : 0}">0</h3>
+                <p>Tổng lịch khám</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <h3>Pending</h3>
+                <p>Chờ xác nhận</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h3>Done</h3>
+                <p>Đã hoàn thành</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <h3>AI</h3>
+                <p>Hỗ trợ bệnh án</p>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="appointments-card">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+            <h4 class="mb-0">
+                Danh sách lịch khám
+            </h4>
+
+            <input type="text"
+                   class="search-box"
+                   placeholder="Tìm bệnh nhân, lý do khám..."
+                   onkeyup="filterAppointments(this.value)">
+        </div>
+
+        <div th:if="${appointments == null or #lists.isEmpty(appointments)}" class="empty-state">
+            <i class="bi bi-calendar-x"></i>
+            <h4>Chưa có lịch khám</h4>
+            <p>Lịch khám của bác sĩ sẽ hiển thị tại đây.</p>
+        </div>
+
+        <div class="table-responsive" th:if="${appointments != null and !#lists.isEmpty(appointments)}">
+            <table class="table align-middle" id="appointmentsTable">
+                <thead>
+                <tr>
+                    <th>Bệnh nhân</th>
+                    <th>Ngày khám</th>
+                    <th>Giờ</th>
+                    <th>Lý do khám</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="appointment : ${appointments}">
+                    <td>
+                        <div class="patient-name"
+                             th:text="${appointment.patient.user.fullName}">
+                            Tên bệnh nhân
+                        </div>
+                        <div class="sub-text"
+                             th:text="${appointment.patient.user.email}">
+                            Email
+                        </div>
+                    </td>
+
+                    <td th:text="${appointment.appointmentDate}">
+                        2026-01-01
+                    </td>
+
+                    <td th:text="${appointment.appointmentTime}">
+                        08:00
+                    </td>
+
+                    <td>
+                        <div class="reason-box"
+                             th:text="${appointment.reason}">
+                            Lý do khám
+                        </div>
+                    </td>
+
+                    <td>
+                        <span th:if="${appointment.status.name() == 'PENDING'}"
+                              class="status-badge status-pending">
+                            Chờ xác nhận
+                        </span>
+
+                        <span th:if="${appointment.status.name() == 'CONFIRMED'}"
+                              class="status-badge status-confirmed">
+                            Đã xác nhận
+                        </span>
+
+                        <span th:if="${appointment.status.name() == 'COMPLETED'}"
+                              class="status-badge status-completed">
+                            Hoàn thành
+                        </span>
+
+                        <span th:if="${appointment.status.name() == 'CANCELLED'}"
+                              class="status-badge status-cancelled">
+                            Đã hủy
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <a th:if="${appointment.status.name() == 'PENDING'}"
+                               th:href="@{'/doctor/appointments/' + ${appointment.id} + '/confirm'}"
+                               class="btn-confirm">
+                                <i class="bi bi-check-circle"></i>
+                                Xác nhận
+                            </a>
+
+                            <a th:if="${appointment.status.name() == 'CONFIRMED'}"
+                               th:href="@{'/doctor/appointments/' + ${appointment.id} + '/complete'}"
+                               class="btn-complete">
+                                <i class="bi bi-clipboard-check"></i>
+                                Hoàn thành
+                            </a>
+
+                            <a th:if="${appointment.status.name() == 'CONFIRMED' or appointment.status.name() == 'COMPLETED'}"
+                               th:href="@{'/doctor/medical-records/create?appointmentId=' + ${appointment.id}}"
+                               class="btn-record">
+                                <i class="bi bi-file-earmark-plus"></i>
+                                Tạo bệnh án
+                            </a>
+
+                            <a th:if="${appointment.status.name() == 'PENDING'}"
+                               th:href="@{'/doctor/appointments/' + ${appointment.id} + '/cancel'}"
+                               class="btn-cancel"
+                               onclick="return confirm('Bạn có chắc muốn hủy lịch khám này?')">
+                                <i class="bi bi-x-circle"></i>
+                                Hủy
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <div class="ai-tip">
+        <h5 class="fw-bold">
+            <i class="bi bi-lightbulb"></i>
+            AI Tip cho bác sĩ
+        </h5>
+        <p class="mb-0">
+            Sau khi hoàn thành lịch khám và tạo bệnh án, hãy dùng chức năng
+            <strong>AI tóm tắt bệnh án</strong> để rút gọn triệu chứng, chẩn đoán và ghi chú tái khám.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function filterAppointments(keyword) {
+        keyword = keyword.toLowerCase();
+        const rows = document.querySelectorAll("#appointmentsTable tbody tr");
+
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(keyword) ? "" : "none";
+        });
+    }
+</script>
+
+</body>
+</html>

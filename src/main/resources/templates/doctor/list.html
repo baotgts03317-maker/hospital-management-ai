@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách bác sĩ - AI Smart Clinic</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.28), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.28), transparent 35%),
+                #0f172a;
+            color: #e5e7eb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            padding: 50px 0;
+        }
+
+        .top-card {
+            background: rgba(17, 24, 39, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 28px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.18);
+        }
+
+        .page-title {
+            font-weight: 900;
+            color: #f8fafc;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #94a3b8;
+            margin-bottom: 0;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 11px 20px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-ai:hover {
+            color: white;
+            opacity: 0.92;
+        }
+
+        .btn-ai-outline {
+            border: 1px solid rgba(147, 197, 253, 0.35);
+            color: #e0f2fe;
+            border-radius: 16px;
+            padding: 11px 20px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-ai-outline:hover {
+            background: rgba(59, 130, 246, 0.16);
+            color: white;
+        }
+
+        .doctor-card {
+            height: 100%;
+            background: rgba(17, 24, 39, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 0 28px rgba(15, 23, 42, 0.45);
+            transition: 0.25s;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(56, 189, 248, 0.55);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.18);
+        }
+
+        .doctor-image-box {
+            height: 230px;
+            background:
+                linear-gradient(135deg, rgba(37, 99, 235, 0.28), rgba(124, 58, 237, 0.28)),
+                #020617;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .doctor-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .doctor-placeholder {
+            width: 92px;
+            height: 92px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            color: white;
+            box-shadow: 0 0 28px rgba(59, 130, 246, 0.35);
+        }
+
+        .doctor-body {
+            padding: 24px;
+        }
+
+        .doctor-name {
+            color: #f8fafc;
+            font-size: 22px;
+            font-weight: 850;
+            margin-bottom: 12px;
+        }
+
+        .doctor-meta {
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+
+        .doctor-meta strong {
+            color: #93c5fd;
+        }
+
+        .specialization-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(56, 189, 248, 0.14);
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            color: #7dd3fc;
+            border-radius: 999px;
+            padding: 8px 13px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .doctor-description {
+            color: #94a3b8;
+            line-height: 1.6;
+            min-height: 100px;
+        }
+
+        .rating {
+            color: #facc15;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .empty-card {
+            background: rgba(17, 24, 39, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 24px;
+            padding: 45px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 30px 0;
+            }
+
+            .top-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container page-wrapper">
+
+    <div class="top-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-person-heart text-info"></i>
+                    Danh sách bác sĩ
+                </h1>
+
+                <p class="page-subtitle">
+                    Chọn bác sĩ phù hợp hoặc dùng AI tư vấn triệu chứng để được gợi ý chuyên khoa thông minh.
+                </p>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+                <a th:href="@{/patient/ai-consultation}" class="btn-ai">
+                    <i class="bi bi-robot me-1"></i>
+                    AI tư vấn
+                </a>
+
+                <a th:href="@{/patient/dashboard}" class="btn-ai-outline">
+                    <i class="bi bi-grid-1x2 me-1"></i>
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(doctors)}" class="empty-card">
+        <i class="bi bi-person-x fs-1"></i>
+        <h4 class="mt-3">Chưa có bác sĩ trong hệ thống</h4>
+        <p>Vui lòng thêm dữ liệu bác sĩ để hiển thị danh sách.</p>
+    </div>
+
+    <div class="row g-4" th:if="${!#lists.isEmpty(doctors)}">
+
+        <div class="col-lg-4 col-md-6" th:each="doctor : ${doctors}">
+
+            <div class="doctor-card">
+
+                <div class="doctor-image-box">
+
+                    <img th:if="${doctor.imageUrl != null and doctor.imageUrl != ''}"
+                         th:src="@{'/uploads/' + ${doctor.imageUrl}}"
+                         alt="Doctor image">
+
+                    <div th:if="${doctor.imageUrl == null or doctor.imageUrl == ''}"
+                         class="doctor-placeholder">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+
+                </div>
+
+                <div class="doctor-body">
+
+                    <h3 class="doctor-name"
+                        th:text="${doctor.user.fullName}">
+                        Tên bác sĩ
+                    </h3>
+
+                    <div class="specialization-badge">
+                        <i class="bi bi-heart-pulse"></i>
+                        <span th:text="${doctor.specialization}">
+                            Chuyên khoa
+                        </span>
+                    </div>
+
+                    <p class="doctor-meta">
+                        <strong>Kinh nghiệm:</strong>
+                        <span th:text="${doctor.experience}">0</span> năm
+                    </p>
+
+                    
+
+                    <p class="doctor-description"
+                       th:text="${doctor.description}">
+                        Mô tả bác sĩ.
+                    </p>
+
+                    <a th:href="@{'/appointments/book/' + ${doctor.id}}"
+   						class="btn-ai w-100 text-center">
+    					<i class="bi bi-calendar-check me-1"></i>
+    					Đặt lịch khám
+					</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
