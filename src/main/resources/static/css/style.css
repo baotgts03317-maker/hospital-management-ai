@@ -201,4 +201,16 @@ canvas{ max-width:100%; }
   .container,.container-fluid{ padding-left:14px!important; padding-right:14px!important; }
   .card{ margin-bottom:16px; }
   h1{font-size:32px} h2{font-size:26px}
+  
+  td:last-child {
+    min-width: 170px;
+}
+
+.btn-record,
+.btn-confirm,
+.btn-complete,
+.btn-cancel {
+    text-align: center;
+    white-space: nowrap;
+}
 }

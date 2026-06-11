@@ -39,7 +39,8 @@ public class DoctorController {
                 "appointments",
                 appointmentService.findByDoctor(doctor)
         );
-
+        
+        model.addAttribute("doctorUserId", user.getId());
         return "doctor/appointments";
     }
 

@@ -2,73 +2,322 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tạo bệnh án</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <title>Tạo bệnh án - AI Smart Clinic</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(37,99,235,.28), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124,58,237,.28), transparent 35%),
+                #0f172a;
+            color: #e5e7eb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .page-wrapper {
+            padding: 45px 0;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            border-radius: 30px;
+            padding: 34px;
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: 0 0 42px rgba(59,130,246,.28);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            right: -90px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.12);
+        }
+
+        .hero-card h1,
+        .hero-card p,
+        .hero-card a {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-card h1 {
+            font-weight: 900;
+        }
+
+        .hero-card p {
+            color: #dbeafe;
+            max-width: 760px;
+        }
+
+        .btn-ai-light {
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .btn-ai-outline-light {
+            border: 1px solid rgba(255,255,255,.45);
+            color: white;
+            border-radius: 16px;
+            padding: 11px 18px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .btn-ai-outline-light:hover {
+            background: rgba(255,255,255,.15);
+            color: white;
+        }
+
+        .form-card {
+            background: rgba(17,24,39,.95);
+            border: 1px solid rgba(148,163,184,.2);
+            border-radius: 30px;
+            padding: 32px;
+            box-shadow: 0 0 35px rgba(15,23,42,.35);
+        }
+
+        .patient-box {
+            background: linear-gradient(135deg, rgba(37,99,235,.18), rgba(124,58,237,.18));
+            border: 1px solid rgba(147,197,253,.25);
+            border-radius: 22px;
+            padding: 22px;
+            margin-bottom: 28px;
+        }
+
+        .patient-box h5 {
+            color: #f8fafc;
+            font-weight: 850;
+            margin-bottom: 12px;
+        }
+
+        .info-line {
+            color: #cbd5e1;
+            margin-bottom: 5px;
+        }
+
+        .info-line strong {
+            color: #93c5fd;
+        }
+
+        .form-label {
+            color: #cbd5e1;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            background: #0f172a;
+            border: 1px solid rgba(148,163,184,.28);
+            color: white;
+            border-radius: 18px;
+            padding: 15px;
+            min-height: 110px;
+        }
+
+        .form-control:focus {
+            background: #0f172a;
+            color: white;
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 .2rem rgba(56,189,248,.18);
+        }
+
+        .form-control::placeholder {
+            color: #64748b;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 13px 22px;
+            font-weight: 850;
+        }
+
+        .btn-save:hover {
+            color: white;
+            opacity: .92;
+        }
+
+        .btn-back {
+            background: rgba(148,163,184,.15);
+            color: #e5e7eb;
+            border: 1px solid rgba(148,163,184,.28);
+            border-radius: 16px;
+            padding: 13px 22px;
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            color: white;
+            background: rgba(148,163,184,.25);
+        }
+
+        .ai-tip {
+            background: linear-gradient(135deg, rgba(37,99,235,.18), rgba(124,58,237,.18));
+            border: 1px solid rgba(147,197,253,.24);
+            border-radius: 22px;
+            padding: 22px;
+            margin-top: 28px;
+            color: #dbeafe;
+        }
+    </style>
 </head>
-<body class="bg-light">
 
-<div class="container mt-5">
-    <div class="card shadow border-0">
-        <div class="card-body p-4">
+<body>
 
-            <h3 class="mb-4">Tạo bệnh án</h3>
+<div class="container page-wrapper">
 
-            <div class="alert alert-info">
-                <strong>Bệnh nhân:</strong>
-                <span th:text="${appointment.patient.user.fullName}"></span>
-                <br>
-                <strong>Bác sĩ:</strong>
-                <span th:text="${appointment.doctor.user.fullName}"></span>
+    <section class="hero-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1>
+                    <i class="bi bi-file-earmark-plus"></i>
+                    Tạo bệnh án
+                </h1>
+                <p class="mt-2 mb-0">
+                    Nhập triệu chứng, chẩn đoán, đơn thuốc và ghi chú điều trị cho bệnh nhân.
+                    Sau khi lưu, bác sĩ có thể dùng AI để tóm tắt bệnh án.
+                </p>
             </div>
 
-            <form th:action="@{/doctor/medical-records/create}"
-                  th:object="${recordDTO}"
-                  method="post">
+            <div class="d-flex flex-wrap gap-2">
+                <a th:href="@{/doctor/medical-records}" class="btn-ai-light">
+                    <i class="bi bi-file-medical me-1"></i>
+                    Bệnh án
+                </a>
 
-                <input type="hidden" th:field="*{appointmentId}">
+                <a th:href="@{/doctor/appointments}" class="btn-ai-outline-light">
+                    <i class="bi bi-calendar-check me-1"></i>
+                    Lịch khám
+                </a>
+            </div>
+        </div>
+    </section>
 
-                <div class="mb-3">
-                    <label>Triệu chứng</label>
-                    <textarea th:field="*{symptoms}"
-                              class="form-control"
-                              rows="3"></textarea>
-                </div>
+    <section class="form-card">
 
-                <div class="mb-3">
-                    <label>Chẩn đoán</label>
-                    <textarea th:field="*{diagnosis}"
-                              class="form-control"
-                              rows="3"></textarea>
-                </div>
+        <div class="patient-box">
+            <h5>
+                <i class="bi bi-person-heart"></i>
+                Thông tin lịch khám
+            </h5>
 
-                <div class="mb-3">
-                    <label>Đơn thuốc</label>
-                    <textarea th:field="*{prescription}"
-                              class="form-control"
-                              rows="4"></textarea>
-                </div>
+            <div class="info-line">
+                <strong>Bệnh nhân:</strong>
+                <span th:text="${appointment.patient.user.fullName}">Tên bệnh nhân</span>
+            </div>
 
-                <div class="mb-3">
-                    <label>Ghi chú bác sĩ</label>
-                    <textarea th:field="*{doctorNotes}"
-                              class="form-control"
-                              rows="3"></textarea>
-                </div>
+            <div class="info-line">
+                <strong>Bác sĩ:</strong>
+                <span th:text="${appointment.doctor.user.fullName}">Tên bác sĩ</span>
+            </div>
 
-                <button class="btn btn-primary">
+            <div class="info-line">
+                <strong>Ngày khám:</strong>
+                <span th:text="${appointment.appointmentDate}">Ngày khám</span>
+            </div>
+
+            <div class="info-line">
+                <strong>Lý do khám:</strong>
+                <span th:text="${appointment.reason}">Lý do khám</span>
+            </div>
+        </div>
+
+        <form th:action="@{/doctor/medical-records/create}"
+      		th:object="${recordDTO}"
+      		method="post">
+
+            <input type="hidden" th:field="*{appointmentId}">
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="bi bi-activity"></i>
+                    Triệu chứng
+                </label>
+                <textarea th:field="*{symptoms}"
+                          class="form-control"
+                          placeholder="Ví dụ: Bệnh nhân sốt cao, ho nhiều, đau họng..."
+                          required></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="bi bi-clipboard2-pulse"></i>
+                    Chẩn đoán
+                </label>
+                <textarea th:field="*{diagnosis}"
+                          class="form-control"
+                          placeholder="Ví dụ: Viêm họng cấp, cảm cúm..."
+                          required></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="bi bi-capsule"></i>
+                    Đơn thuốc
+                </label>
+                <textarea th:field="*{prescription}"
+                          class="form-control"
+                          placeholder="Ví dụ: Paracetamol, Vitamin C, thuốc ho..."
+                          required></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="bi bi-chat-left-text"></i>
+                    Ghi chú bác sĩ
+                </label>
+                <textarea th:field="*{doctorNotes}"
+                          class="form-control"
+                          placeholder="Ví dụ: Nghỉ ngơi, uống đủ nước, tái khám nếu sốt kéo dài..."
+                          required></textarea>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <button type="submit" class="btn-save">
+                    <i class="bi bi-save me-1"></i>
                     Lưu bệnh án
                 </button>
 
-                <a th:href="@{/doctor/appointments}"
-                   class="btn btn-secondary">
+                <a th:href="@{/doctor/appointments}" class="btn-back">
+                    <i class="bi bi-arrow-left me-1"></i>
                     Quay lại
                 </a>
+            </div>
 
-            </form>
+        </form>
 
-        </div>
+    </section>
+
+    <div class="ai-tip">
+        <h5 class="fw-bold">
+            <i class="bi bi-lightbulb"></i>
+            AI Tip
+        </h5>
+        <p class="mb-0">
+            Sau khi lưu bệnh án, vào danh sách bệnh án và bấm
+            <strong>Tóm tắt AI</strong> để hệ thống tự động rút gọn nội dung bệnh án.
+        </p>
     </div>
+
 </div>
 
 </body>

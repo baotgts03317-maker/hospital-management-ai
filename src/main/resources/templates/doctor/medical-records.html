@@ -330,7 +330,7 @@
                 <div class="stat-icon">
                     <i class="bi bi-journal-medical"></i>
                 </div>
-                <h3 th:text="${medicalRecords != null ? #lists.size(medicalRecords) : 0}">0</h3>
+                <h3 th:text="${recordPage != null ? recordPage.totalElements : 0}">0</h3>
                 <p>Tổng bệnh án</p>
             </div>
         </div>
@@ -380,7 +380,7 @@
                    onkeyup="filterRecords(this.value)">
         </div>
 
-        <div th:if="${medicalRecords == null or #lists.isEmpty(medicalRecords)}" class="empty-state">
+        <div th:if="${recordPage == null or #lists.isEmpty(recordPage.content)}" class="empty-state">
             <i class="bi bi-file-earmark-x"></i>
             <h4>Chưa có bệnh án</h4>
             <p>Sau khi tạo bệnh án, dữ liệu sẽ hiển thị tại đây.</p>
@@ -391,7 +391,8 @@
             </a>
         </div>
 
-        <div class="table-responsive" th:if="${medicalRecords != null and !#lists.isEmpty(medicalRecords)}">
+        <div class="table-responsive"
+     		th:if="${recordPage != null and !#lists.isEmpty(recordPage.content)}">
             <table class="table align-middle" id="recordsTable">
                 <thead>
                 <tr>
@@ -405,7 +406,7 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="record : ${medicalRecords}">
+                <tr th:each="record : ${recordPage.content}">
                     <td>
                         <div class="patient-name"
                              th:text="${record.appointment.patient.user.fullName}">

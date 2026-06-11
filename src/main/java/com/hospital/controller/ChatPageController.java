@@ -23,11 +23,13 @@ public class ChatPageController {
             @PathVariable Long receiverId,
             Model model) {
 
-        User sender = userRepository.findById(senderId)
-                .orElseThrow();
+    	User sender = userRepository.findById(senderId)
+    	        .orElseThrow(() ->
+    	            new RuntimeException("Không tìm thấy Sender"));
 
-        User receiver = userRepository.findById(receiverId)
-                .orElseThrow();
+    	User receiver = userRepository.findById(receiverId)
+    	        .orElseThrow(() ->
+    	            new RuntimeException("Không tìm thấy Receiver"));
 
         model.addAttribute("sender", sender);
 
